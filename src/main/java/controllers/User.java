@@ -97,8 +97,6 @@ public class User {
 
     }
 
-}
-
     /*@Path("get/{UserID}")
     public String getFood(@PathParam("UserID") Integer UserID) {
         System.out.println("Invoked User.getUser() with UserID " + UserID);
