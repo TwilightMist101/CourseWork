@@ -23,25 +23,49 @@ public class User {
     @Path("login")
     public String loginUser(@FormDataParam("Email") String Email, @FormDataParam("Password") String Password) {
         System.out.println("Invoked loginUser() on path user/login");
-
-        int userID = getUserID(Email, Password);
-        System.out.println("UserID is " + userID);
-        if (userID == -1) {
-            return "{\"Error\": \"Username or password is incorrect.  Are you sure you've registered? \"}";
-        }
-        String uuid = UUID.randomUUID().toString();
-        String result = updateUUIDinDB(userID, uuid);
-        System.out.println("Generated uuid of " + uuid);
-        if (result.equals("OK")) {
-            JSONObject userDetails = new JSONObject();
-            userDetails.put("sessionToken", uuid);
-            return userDetails.toString();
-        } else {
-            return "{\"Error\": \"Something as gone wrong.  Please contact the administrator with the error code UC-UL. \"}";
+        try {
+            PreparedStatement ps1 = Main.db.prepareStatement("SELECT Password FROM Users WHERE Email = ?");
+            ps1.setString(1, Email);
+            ResultSet loginResults = ps1.executeQuery();
+            if (loginResults.next() == true) {
+                String correctPassword = loginResults.getString(1);
+                if (Password.equals(correctPassword)) {
+                    String Token = UUID.randomUUID().toString();
+                    PreparedStatement ps2 = Main.db.prepareStatement("UPDATE Users SET Token = ? WHERE Email = ?");
+                    ps2.setString(1, Token);
+                    ps2.setString(2, Email);
+                    ps2.executeUpdate();
+                    JSONObject userDetails = new JSONObject();
+                    userDetails.put("Email", Email);
+                    userDetails.put("Token", Token);
+                    return userDetails.toString();
+                } else {
+                    return "{\"Error\": \"Incorrect password!\"}";
+                }
+            } else {
+                return "{\"Error\": \"Email and password are incorrect.\"}";
+            }
+        } catch (Exception exception) {
+            System.out.println("Database error during /user/login: " + exception.getMessage());
+            return "{\"Error\": \"Server side error!\"}";
         }
     }
 
-    private static int getUserID(String email, String password) {
+    public static boolean validToken(String Token) {        // this method MUST be called before any data is returned to the browser
+        // token is taken from the Cookie sent back automatically with every HTTP request
+        try {
+            PreparedStatement ps = Main.db.prepareStatement("SELECT UserID FROM Users WHERE Token = ?");
+            ps.setString(1, Token);
+            ResultSet logoutResults = ps.executeQuery();
+            return logoutResults.next();   //logoutResults.next() will be true if there is a record in the ResultSet
+        } catch (Exception exception) {
+            System.out.println("Database error" + exception.getMessage());
+            return false;
+        }
+    }
+
+
+    /*private static int getUserID(String email, String password) {
         System.out.println("Invoked User.getUserID()");
         try {
             PreparedStatement ps1 = Main.db.prepareStatement("SELECT UserID FROM Users WHERE Email = ? AND Password = ?");
@@ -94,7 +118,7 @@ public class User {
             return -1;  //rogue value indicating error
 
         }
-    }
+    }*/
 
     @POST
     @Path("add")
