@@ -1,0 +1,46 @@
+#pageHeading {
+    width: auto;
+    margin: auto;
+    text-align: center;
+    font-family: Georgia, serif;
+    color: black;
+    background-color: gray;
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 70px 0;
+    width: 75%;
+}
+
+.formCenter {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.button {
+    width: 75%;
+    color: #2F98D1;
+    background-color: white;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    font-family:  'Arial', sans-serif;
+    padding: 12px 20px;
+    margin: auto;
+    box-sizing: border-box;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+button:hover{
+    background: #d70010;
+}
+
+body {
+    width: auto;
+    height: auto;
+    background-image: radial-gradient(circle, white 20%, darkgray 60%);
+}

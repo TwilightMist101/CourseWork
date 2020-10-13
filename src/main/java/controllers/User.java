@@ -6,6 +6,11 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.simple.JSONObject;
 
+import javax.xml.bind.DatatypeConverter;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
@@ -122,28 +127,39 @@ public class User {
 
     @POST
     @Path("add")
-    public String userAdd(@FormDataParam("userID") int userID, @FormDataParam("name") String name,
-                          @FormDataParam("email") String email, @FormDataParam("password") String password,
-                          @FormDataParam("admin") boolean admin) {
+    public String userAdd(@FormDataParam("userID") int userID, @FormDataParam("firstName") String firstName,
+                          @FormDataParam("lastName") String lastName, @FormDataParam("password") String password,
+                          @FormDataParam("email") String email, @FormDataParam("admin") boolean admin) {
         System.out.println("Invoked User.userAdd()");
 
-        //would be better to test if username taken and if username and password already exist and return useful error message to browswer.
+        //would be better to test if username taken and if username and password already exist and return useful error message to browser.
 
         try {
             PreparedStatement statement = Main.db.prepareStatement(
-                    "INSERT INTO Users (UserID, Name, Email, Password, Admin) VALUES (?, ?, ?, ?, ?)"
+                    "INSERT INTO Users (UserID, FirstName, LastName, Password, Email, Admin) VALUES (?, ?, ?, ?, ?, ?)"
             );
             statement.setInt(1, userID);
-            statement.setString(2, name);
-            statement.setString(3, email);
-            statement.setString(4, password);
-            statement.setBoolean(5, admin);
+            statement.setString(2, firstName);
+            statement.setString(3, lastName);
+            statement.setString(4, generateHash(password));
+            statement.setString(5, email);
+            statement.setBoolean(6, admin);
             statement.executeUpdate();
             return "{\"OK\": \"New user has been added successfully. \"}";
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return "{\"Error\": \"Something as gone wrong.  Please contact the administrator with the error code UC-UA. \"}";
+        }
+    }
+
+    public static String generateHash(String password) {
+        try {
+            MessageDigest hasher = MessageDigest.getInstance("MD5");
+            hasher.update(password.getBytes());
+            return DatatypeConverter.printHexBinary(hasher.digest()).toUpperCase();
+        } catch (NoSuchAlgorithmException nsae) {
+            return nsae.getMessage();
         }
     }
 
