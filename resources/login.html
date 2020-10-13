@@ -6,28 +6,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.js"></script>
     <script>
 
-        function validateForm() {
-            console.log("Invoked validateForm()");
-            let valid = true;
-
-            document.getElementById("emailValidationText").innerHTML = "";
-            document.getElementById("passwordValidationText").innerHTML = "";
-
-            if (document.getElementById("email").value === "") {
-                document.getElementById("emailValidationText").innerHTML = "Please enter your email.";
-                valid = false;
-            }
-
-            if (!document.getElementById("password").checkValidity()) {
-                document.getElementById("passwordValidationText").innerHTML = "Please enter password length 5 - 25 chars";
-                valid = false;
-            }
-
-            if (valid === true) {
-                postUserLogin()
-            }
-        }
-
         function postUserLogin() {
             console.log("Invoked postUserLogin() ");
 
@@ -41,10 +19,11 @@
                 return response.json();                 //now return that promise to JSON
         }).then(response => {
                 if (response.hasOwnProperty("Error")) {
-                alert("Username and password not recognised");
+                alert(JSON.stringify(response));
             } else {
-                Cookies.set("sessionToken", response.sessionToken);   //response is UUID value for session cookie
-                window.open("welcome.html", "_self");       //open welcome.html in same tab.
+                Cookies.set("Token", response.Token);
+                Cookies.set("Email", response.Email);
+                window.open("welcome.html", "_self");
             }
         });
         }
@@ -65,7 +44,7 @@
 
 </form>
 
-<button class="button" onclick='validateForm();'>Login</button>
+<button class="button" onclick='postUserLogin();'>Login</button>
 
 <br>
 </body>
