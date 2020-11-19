@@ -6,33 +6,20 @@
 
     <link rel="stylesheet" href="css/style.css">
 
-    <script src="/client/js/jquery-3.3.1.min.js"></script>
-
-    <script src="/client/js/bootstrap.min.js"></script>
-    <script src="/client/js/js.cookie.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.js"></script>
     <script>
         function validateForm() {
             console.log("Invoked validateForm()");
 
             let valid = true;
 
-            document.getElementById("userIDValidText").innerHTML = "";
+
             document.getElementById("firstNameValidText").innerHTML = "";
             document.getElementById("lastNameValidText").innerHTML = "";
             document.getElementById("passwordValidText").innerHTML = "";
             document.getElementById("emailValidText").innerHTML = "";
-            document.getElementById("adminValidText").innerHTML = "";
-            document.getElementById("TokenValidText").innerHTML = "";
 
-            /*if (document.getElementById("userID").value == "") {
-                document.getElementById("userIDValidText").innerHTML = "Please enter your first name.";
-                valid = false;
-            }*/
 
-            /*if (!document.getElementById("userID").checkValidity()) {
-                valid = false;
-            }*/
 
             if (document.getElementById("firstName").value == "") {
                 document.getElementById("firstNameValidText").innerHTML = "Please enter your first name.";
@@ -71,7 +58,7 @@
                 return response.json();                 //return promise to JSON
             }).then(response => {
                 if (response.hasOwnProperty("Error")) {   //check for key (aka property) called Error
-                    alert("Error of some sort man");
+                    alert(response.toString());
                 } else {
                     alert("New account created. Please log in");
                     window.open("login.html", "_self");

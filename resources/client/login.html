@@ -26,8 +26,7 @@
                 if (response.hasOwnProperty("Error")) {
                 alert(JSON.stringify(response));
             } else {
-                Cookies.set("Token", response.Token);
-                Cookies.set("Email", response.Email);
+                Cookies.set("Token", response.token);
                 window.open("index.html", "_self");
             }
         });

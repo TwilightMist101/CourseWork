@@ -26,87 +26,40 @@ import java.util.UUID;
 public class User {
     @POST
     @Path("login")
-    public String loginUser(@FormDataParam("Email") String Email, @FormDataParam("Password") String Password) {
-        System.out.println("Invoked loginUser() on path user/login");
+    public String loginUser(@FormDataParam("email") String email, @FormDataParam("password") String password) {
+        System.out.println("Invoked login() with email of " + email + " and password " + password);
+
+        String hashedPassword = generateHash(password);
+
         try {
-            PreparedStatement ps1 = Main.db.prepareStatement("SELECT Password FROM Users WHERE Email = ?");
-            ps1.setString(1, Email);
-            ResultSet loginResults = ps1.executeQuery();
-            if (loginResults.next() == true) {
-                String correctPassword = loginResults.getString(1);
-                if (Password.equals(correctPassword)) {
-                    String Token = UUID.randomUUID().toString();
-                    PreparedStatement ps2 = Main.db.prepareStatement("UPDATE Users SET Token = ? WHERE Email = ?");
-                    ps2.setString(1, Token);
-                    ps2.setString(2, Email);
-                    ps2.executeUpdate();
-                    JSONObject userDetails = new JSONObject();
-                    userDetails.put("Email", Email);
-                    userDetails.put("Token", Token);
-                    return userDetails.toString();
+            PreparedStatement statement = Main.db.prepareStatement("SELECT UserID FROM Users WHERE Email = ? AND Password = ?");
+            statement.setString(1, email);
+            statement.setString(2, hashedPassword);
+            ResultSet results = statement.executeQuery();
+            //if there is not record with this email and password, condition below will be false
+            if (results.next() == false) {
+                return "{\"Error\": \"Username or password is incorrect.  Are you sure you've registered? \"}";
+            } else {
+                int userId = results.getInt("UserId");          //take the userId from the record returned in results
+                String token = UUID.randomUUID().toString();                 //create a unique ID for session
+
+                if (isTokenSetInDB(userId, token) == true) {   //store token for the user in the database
+                    JSONObject cookie = new JSONObject();
+                    cookie.put("token", token);
+                    return cookie.toString();
                 } else {
-                    return "{\"Error\": \"Incorrect password!\"}";
+                    return "{\"Error\": \"Something as gone wrong.  Please contact the administrator with the error code UC-UL. \"}";
                 }
-            } else {
-                return "{\"Error\": \"Email and password are incorrect.\"}";
-            }
-        } catch (Exception exception) {
-            System.out.println("Database error during /user/login: " + exception.getMessage());
-            return "{\"Error\": \"Server side error!\"}";
-        }
-    }
-
-    public static boolean validToken(String Token) {        // this method MUST be called before any data is returned to the browser
-        // token is taken from the Cookie sent back automatically with every HTTP request
-        try {
-            PreparedStatement ps = Main.db.prepareStatement("SELECT UserID FROM Users WHERE Token = ?");
-            ps.setString(1, Token);
-            ResultSet logoutResults = ps.executeQuery();
-            return logoutResults.next();   //logoutResults.next() will be true if there is a record in the ResultSet
-        } catch (Exception exception) {
-            System.out.println("Database error" + exception.getMessage());
-            return false;
-        }
-    }
-
-
-    /*private static int getUserID(String email, String password) {
-        System.out.println("Invoked User.getUserID()");
-        try {
-            PreparedStatement ps1 = Main.db.prepareStatement("SELECT UserID FROM Users WHERE Email = ? AND Password = ?");
-            ps1.setString(1, email);
-            ps1.setString(2, password);
-            ResultSet resultSet = ps1.executeQuery();
-
-            if (resultSet.next()==false){
-                return -1 ;
-            } else {
-                return resultSet.getInt("UserID");
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return -1;
+            return "{\"Error\": \"Something has gone wrong.  Please contact the administrator with the error code ???? \"}";
         }
+
     }
 
-    private static String updateUUIDinDB(int userID, String uuid) {
-        System.out.println("Invoked User.updateUUIDinDB()");
 
-        try {
-            PreparedStatement statement = Main.db.prepareStatement(
-                    "UPDATE Users SET Token = ? WHERE UserID = ?"
-            );
-            statement.setString(1, uuid);
-            statement.setInt(2, userID);
-            statement.executeUpdate();
-            return "OK";
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "Error";
-        }
-    }
-
-    public static int validateSessionCookie(Cookie sessionCookie){
+    public static int validateSessionCookie(Cookie sessionCookie) {
         String uuid = sessionCookie.getValue();
         System.out.println("Invoked User.validateSessionCookie(), cookie value " + uuid);
 
@@ -123,27 +76,45 @@ public class User {
             return -1;  //rogue value indicating error
 
         }
-    }*/
+    }
+
+
+
+    private static boolean isTokenSetInDB(int userId, String token) {
+        System.out.println("Invoked isTokenSetInDB()");
+
+        try {
+            PreparedStatement statement = Main.db.prepareStatement("UPDATE Users SET Token = ? WHERE UserID = ?"
+            );
+            statement.setString(1, token);
+            statement.setInt(2, userId);
+            statement.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
+
 
     @POST
     @Path("add")
-    public String userAdd(@FormDataParam("userID") int userID, @FormDataParam("firstName") String firstName,
-                          @FormDataParam("lastName") String lastName, @FormDataParam("password") String password,
-                          @FormDataParam("email") String email, @FormDataParam("admin") boolean admin) {
+    public String userAdd(@FormDataParam("firstName") String firstName, @FormDataParam("lastName") String lastName, @FormDataParam("password") String password,
+                          @FormDataParam("email") String email) {
         System.out.println("Invoked User.userAdd()");
 
         //would be better to test if username taken and if username and password already exist and return useful error message to browser.
 
         try {
             PreparedStatement statement = Main.db.prepareStatement(
-                    "INSERT INTO Users (UserID, FirstName, LastName, Password, Email, Admin) VALUES (?, ?, ?, ?, ?, ?)"
+                    "INSERT INTO Users (FirstName, LastName, Password, Email, Admin) VALUES (?, ?, ?, ?, ?)"
             );
-            statement.setInt(1, userID);
-            statement.setString(2, firstName);
-            statement.setString(3, lastName);
-            statement.setString(4, generateHash(password));
-            statement.setString(5, email);
-            statement.setBoolean(6, admin);
+           statement.setString(1, firstName);
+            statement.setString(2, lastName);
+            statement.setString(3, generateHash(password));
+            statement.setString(4, email);
+            statement.setBoolean(5, false);
             statement.executeUpdate();
             return "{\"OK\": \"New user has been added successfully. \"}";
 
