@@ -17,7 +17,7 @@
             const url = "/user/get";
             fetch(url, {
                 method: "GET",
-            }).then(response => {                       //returns a promse
+            }).then(response => {                       //returns a promise
                 return response.json();                 //now return that promise to JSON
             }).then(response => {
                 if (response.hasOwnProperty("Error")) {   //checks if response from server has a key "Error:"
