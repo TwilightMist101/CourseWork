@@ -10,14 +10,16 @@ import javax.xml.bind.DatatypeConverter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-
 import javax.ws.rs.*;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import java.io.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.UUID;
+
+import static server.Convertor.convertToJSONObject;
 
 @Path("user/")
 @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -134,6 +136,31 @@ public class User {
             return DatatypeConverter.printHexBinary(hasher.digest()).toUpperCase();
         } catch (NoSuchAlgorithmException nsae) {
             return nsae.getMessage();
+        }
+    }
+
+    @GET
+    @Path("get")
+    public String userGet(@CookieParam("sessionToken") Cookie sessionCookie) throws SQLException {
+        System.out.println("Invoked User.userGet()");
+
+        if (sessionCookie == null) {
+            return "{\"Error\": \"Something as gone wrong.  Please contact the administrator with the error code UC-UG. \"}";
+        }
+
+        try {
+            String uuid = sessionCookie.getValue();
+            PreparedStatement statement = Main.db.prepareStatement(
+                    "SELECT * FROM Users WHERE Token = ?"
+            );
+            statement.setString(1, uuid);
+            ResultSet resultSet = statement.executeQuery();
+            JSONObject resultsJSON = convertToJSONObject(resultSet);
+            return resultsJSON.toString();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "{\"Error\": \"Something as gone wrong.  Please contact the administrator with the error code UC-UG. \"}";
         }
     }
 
