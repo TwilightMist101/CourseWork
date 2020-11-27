@@ -100,8 +100,11 @@ public class User {
 
     @POST
     @Path("add")
-    public String userAdd(@FormDataParam("firstName") String firstName, @FormDataParam("lastName") String lastName, @FormDataParam("password") String password,
-                          @FormDataParam("email") String email) {
+    public String userAdd(@FormDataParam("firstName") String firstName,
+                          @FormDataParam("lastName") String lastName,
+                          @FormDataParam("password") String password,
+                          @FormDataParam("email") String email,
+                          @FormDataParam("admin") boolean admin) {
         System.out.println("Invoked User.userAdd()");
 
         //would be better to test if username taken and if username and password already exist and return useful error message to browser.

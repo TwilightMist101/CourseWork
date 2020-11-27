@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>New User</title>
 
+    <link rel="icon" href="img/default.jpg">
+
     <link rel="stylesheet" href="css/style.css">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.js"></script>
@@ -12,7 +14,6 @@
             console.log("Invoked validateForm()");
 
             let valid = true;
-
 
             document.getElementById("firstNameValidText").innerHTML = "";
             document.getElementById("lastNameValidText").innerHTML = "";
@@ -23,10 +24,12 @@
 
             if (document.getElementById("firstName").value == "") {
                 document.getElementById("firstNameValidText").innerHTML = "Please enter your first name.";
+                valid = false;
             }
 
             if (document.getElementById("lastName").value == "") {
                 document.getElementById("lastNameValidText").innerHTML = "Please enter your last name.";
+                valid = false;
             }
 
             if (!document.getElementById("password").checkValidity()) {
@@ -71,7 +74,9 @@
 
 <div class="topnav">
     <a class="active" href="login.html">Profile</a>
-    <a class="topnav-centered" href="login.html">Mentality</a>
+    <div class="topnav-centered">
+        <a class="a" href="index.html">Mentality</a>
+    </div>
     <input type="text" placeholder="Search..">
 </div>
 
@@ -96,8 +101,8 @@
            placeholder="Password (5-25 characters)">
     <div id="passwordValidText"></div>
 
-    <input type="email" pattern="^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$" required class="form-control" id="email"
-           name="email" placeholder="Email Address">
+    <input type="email" pattern="^\w+@farnborough.ac.uk"
+           required class="form-control" id="email" name="email" placeholder="Email">
     <div id="emailValidText"></div>
 </form>
 
