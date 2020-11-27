@@ -123,7 +123,7 @@ public class User {
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return "{\"Error\": \"Something as gone wrong.  Please contact the administrator with the error code UC-UA. \"}";
+            return "{\"Error\": \"Something has gone wrong.  Please contact the administrator with the error code UC-UA. \"}";
         }
     }
 
