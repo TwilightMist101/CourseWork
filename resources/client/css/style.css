@@ -99,26 +99,26 @@ body {
     color: white;
 }
 
-.halfDivs{
+.halfDivsUser{
     width: 50%;
     float: left;
 }
 
-.recordBox{
+.recordBoxUser{
     margin-bottom: 16px;
     border: 2px solid black;
     background-color: silver;
     padding: 8px;
 }
 
-.achievementBox{
+.achievementBoxUser{
     margin-bottom: 16px;
     border: 2px solid black;
     background-color: silver;
     padding: 8px;
 }
 
-.boxText{
+.boxTextUser{
     font-size: 14px;
     color: gray;
     font-weight: bold;
