@@ -6,20 +6,43 @@
 
     <link rel="stylesheet" href="css/style.css">
 
-    <link rel="icon" href="img/default.jpg">
+    <link rel="icon" href="img/icon.jpg">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.js"></script>
+    <script>
+
+    </script>
 </head>
 <body>
 <div class="topnav">
     <a class="a" href="user.html">Profile</a>
+    <a class="a" href="question1.html">Questionnaire</a>
     <div class="topnav-centered">
-        <a class="a" href="index.html">Mentality</a>
+        <a class="active" href="index.html">Mentality</a>
     </div>
     <div class="topnav-right">
         <a class="a" href="login.html">Logout</a>
     </div>
     <input type="text" placeholder="Search..">
+</div>
+
+<div style="clear: both">
+    <div id="leftDiv" class="halfDivs">
+        <div style="margin: 16px">
+            <h2>Records</h2>
+            <div id="recordBox" class="recordBox">
+                <div id="recordList" class="boxText">No records yet...</div>
+            </div>
+        </div>
+    </div>
+    <div id="rightDiv" class="halfDivs">
+        <div style="margin: 16px">
+            <h2>Achievements</h2>
+            <div id="achievementBox" class="achievementBox">
+                <div id="achievementList" class="boxText">No achievements yet...</div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>New User</title>
 
-    <link rel="icon" href="img/default.jpg">
+    <link rel="icon" href="img/icon.jpg">
 
     <link rel="stylesheet" href="css/style.css">
 
@@ -101,7 +101,7 @@
            placeholder="Password (5-25 characters)">
     <div id="passwordValidText"></div>
 
-    <input type="email" pattern="^\w+@farnborough.ac.uk"
+    <input type="email" pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
            required class="form-control" id="email" name="email" placeholder="Email">
     <div id="emailValidText"></div>
 </form>
