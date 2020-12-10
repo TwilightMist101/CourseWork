@@ -13,30 +13,31 @@ import java.sql.ResultSet;
 
 import static server.Convertor.convertToJSONArray;
 
-@Path("questionnaire/")
+@Path("record/")
 @Consumes(MediaType.MULTIPART_FORM_DATA)
 @Produces(MediaType.APPLICATION_JSON)
 
-public class Questionnaire {
+public class Record {
     @GET
     @Path("list")
-    public String choiceList(@CookieParam("sessionCookie") Cookie sessionCookie){
-        System.out.println("Invoked Questionnaire.list()");
+    public String recordList(@CookieParam("sessionToken") Cookie sessionCookie){
+        System.out.println("Invoked Record.list()");
 
         int userID = User.validateSessionCookie(sessionCookie);
         if(userID == -1){
-            return "{\"Error\": \"Please log in. Error code EC-EL\"}";
+            return "{\"Error\": \"Please log in.  Error code EC-EL\"}";
         }
-        try{
+
+        try {
             PreparedStatement statement = Main.db.prepareStatement(
-                    "SELECT QuestionId, UserId, Date, ChoiceId FROM Questionnaires WHERE userID = ? order by Date DESC"
+                    "SELECT RecordId, UserId, Date, ChoiceId, ChoiceName FROM Records WHERE userID = ? ORDER BY Date DESC"
             );
             statement.setInt(1, userID);
             ResultSet resultSet = statement.executeQuery();
             JSONArray newJSONArray = convertToJSONArray(resultSet);
             System.out.println(newJSONArray.toString());
             return newJSONArray.toString();
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return "{\"Error\": \"Something as gone wrong.  Please contact the administrator with the error code WC-WL. \"}";
         }
@@ -44,27 +45,28 @@ public class Questionnaire {
 
     @POST
     @Path("add")
-    public String recordAdd(@FormDataParam("questionId") int questionId,
+    public String addRecord(@FormDataParam("date") String date,
                             @FormDataParam("choiceId") int choiceId,
+                            @FormDataParam("choiceName") String choiceName,
                             @CookieParam("sessionToken") Cookie sessionCookie){
-        System.out.println("Invoked Weight.recordAdd()");
+        System.out.println("Invoked Weight.weightAdd()");
 
         int userID = User.validateSessionCookie(sessionCookie);
-        if(userID == -1){
-            return "{\"Error\": \"Please log in. Error code EC-EL\"}";
+        if (userID == -1) {
+            return "{\"Error\": \"Please log in.  Error code EC-EL\"}";
         }
 
-        try{
+        try {
             PreparedStatement statement = Main.db.prepareStatement(
-                    "INSERT INTO Questionnaires (QuestionId, UserId, Date, ChoiceId) VALUES (?, ?, ?, ?)"
+                    "INSERT INTO Records (Date, UserID, ChoiceId, ChoiceName) VALUES (?, ?, ?, ?)"          //database sets WeightID when record created so omitted in SQL
             );
-            statement.setInt(1, questionId);
+            statement.setString(1, date);
             statement.setInt(2, userID);
-            //statement.setString(3, date);
-            statement.setInt(4, choiceId);
+            statement.setInt(3, choiceId);
+            statement.setString(4, choiceName);
             statement.executeUpdate();
             return "{\"OK\": \"Weight has been added. \"}";
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return "{\"Error\": \"Something as gone wrong.  Please contact the administrator with the error code WC-WA. \"}";
         }
