@@ -10,52 +10,15 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.js"></script>
     <script>
-
-        function pageLoad(){
-            console.log("Invoked pageLoad()");
-            var todaysDate = new Date().toISOString().slice(0, 10);
-            document.getElementById("datepicker").setAttribute("value", todaysDate);
-            //getRecordList();
-        }
-
-        function postChoice(){
-            console.log("Invoked postChoice()");
-
-            var questionID = 3;
-            const date = document.getElementById("datepicker").value;
-            var element = document.getElementsByTagName("a");
-            var choiceID = element.id.value;
-
-            var url = "/questionnaire/add";
-            var formData = new FormData();
-            formData.append('questionID', questionID);
-            formData.append('date', date);
-            formData.append('choiceId', choiceID);
-
-            fetch(url, {
-                method: "POST",
-                body: formData,
-            }).then(response => {
-                return response.json()
-            }).then(response => {
-                if(response.hasOwnProperty("Error")){
-                    alert(JSON.stringify(response));
-                } else {
-                    //getRecordList();
-                }
-            });
-
-            window.location.href = "index.html";
-        }
-
-        function logout(){
+        function logout() {
             console.log("logout - remove cookies and redirect to login page");
             Cookies.remove("sessionToken");
             window.location.href = "login.html";
+
         }
     </script>
 </head>
-<body onload="pageLoad()">
+<body>
 <div class="topnav">
     <a class="a" href="user.html">Profile</a>
     <a class="active" href="question1.html">Questionnaire</a>
@@ -70,24 +33,17 @@
 </div>
 
 <div id="questionnaire" class="questionnaire">
-    <h1>How about in the evening?</h1>
+    <h1>How about this evening?</h1>
 
     <table style="width: 50%">
         <tr>
-            <td><a href="index.html" id="choice1" onclick="postChoice()"><img src="img/Happy.jpg" alt="Happy" height="130px" width="130px"></a></td>
-            <td><a href="index.html" id="choice2" onclick="postChoice()"><img src="img/icon.jpg" alt="Happy" height="130px" width="130px"></a></td>
-            <td><a href="index.html" id="choice3" onclick="postChoice()"><img src="img/Meh.jpg" alt="Meh" height="130px" width="130px"></a></td>
-            <td><a href="index.html" id="choice4" onclick="postChoice()"><img src="img/icon.jpg" alt="Happy" height="130px" width="130px"></a></td>
-            <td><a href="index.html" id="choice5" onclick="postChoice()"><img src="img/Unhappy.jpg" alt="Unhappy" height="130px" width="130px"></a></td>
+            <td><a href="index.html" id="choice1"><img src="img/Happy.jpg" alt="Happy" height="130px" width="130px"></a></td>
+            <td><a href="index.html" id="choice2"><img src="img/icon.jpg" alt="Happy" height="130px" width="130px"></a></td>
+            <td><a href="index.html" id="choice3"><img src="img/Meh.jpg" alt="Meh" height="130px" width="130px"></a></td>
+            <td><a href="index.html" id="choice4"><img src="img/icon.jpg" alt="Happy" height="130px" width="130px"></a></td>
+            <td><a href="index.html" id="choice5"><img src="img/Unhappy.jpg" alt="Unhappy" height="130px" width="130px"></a></td>
         </tr>
     </table>
 </div>
-
-<form id="recordForm1">
-    <input type="number" class="form-control" id="questionID">
-    <input type="number" class="userID">
-    <input type="date" class="form-control" id="datapicker">
-    <input type="number" class="form-control" id="choiceId">
-</form>
 </body>
 </html>

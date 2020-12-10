@@ -12,72 +12,79 @@
     <script>
         function pageLoad(){
             console.log("Invoked pageLoad()");
-            var todaysDate = new Date().toISOString().slice(0, 10);
-            document.getElementById("datepicker").setAttribute("value", todaysDate);
+            var todaysDate = new Date().toISOString().slice(0, 10);  //get today's date as yyyy-mm-dd
+            document.getElementById("datepicker").setAttribute("value", todaysDate);  //set DateEaten date picker to today's date
             getRecordList();
+            getAchievementList();
         }
 
         function getRecordList(){
             console.log("Invoked getRecordList()");
-
-            const url = "/questionnaire/list";
-
+            const url = "/record/list";
             fetch(url, {
                 method: "GET",
             }).then(response => {
-                return response.json();
+                return response.json();                 //return promise to JSON
             }).then(response => {
-                if (response.hasOwnProperty("Error")) {
-                    alert(JSON.stringify(response));
+                if (response.hasOwnProperty("Error")) {   //checks if response from web server has a key "Error"
+                    alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
                 } else {
-                    //formatRecordList(response);
+                    formatRecordList(response);         // otherwise format the data as an HTML table
                 }
             });
         }
 
-        /*function formatRecordList(data){
+        function getAchievementList(){
+            console.log("Invoked getAchievementList()");
+            const url = "/achievement/list";
+            fetch(url, {
+                method: "GET",
+            }).then(response => {
+                return response.json();                 //return promise to JSON
+            }).then(response => {
+                if (response.hasOwnProperty("Error")) {   //checks if response from web server has a key "Error"
+                    alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
+                } else {
+                    formatAchievementList(response);         // otherwise format the data as an HTML table
+                }
+            });
+        }
+
+        function formatRecordList(data){
             console.log("Invoked formatRecordList()");
             console.log(data);
-
-            //drawGraph(data);
 
             let firstRecord;
             let lastRecord;
 
-            if (data === undefined || data.length === 0) {
-                firstItemWeight = "No Weight Recorded";
+            if(data === undefined || data.length === 0){
+                firstRecord = "No records created...";
             } else {
-                firstItemWeight = data[0].QuestionID;
-                console.log(firstItemWeight);
+                firstRecord = data[0].choiceName;
+                console.log(firstRecord);
             }
-        }*/
 
-        function postChoice(){
-            console.log("Invoked postChoice()");
+            //document.getElementById("").innerHTML = firstRecord;
 
-            var questionID = 3;
-            var element = document.getElementsByTagName("a");
-            var choiceID = element.id.value;
-            const date = document.getElementById('datepicker').value;
+            const dataSize = data.length;
 
-            var url = "/questionnaire/add";
-            var formData = new FormData();
-            formData.append('questionId', questionID);
-            formData.append('date', date);
-            formData.append('choiceId', choiceID);
+            if(data === undefined || data.length === 0){
+                lastRecord = "No records created..."
+            } else {
+                lastRecord = data[dataSize-1].choiceName;
+                //console.log(lastRecord);
+            }
 
-            fetch(url, {
-                method: "POST",
-                body: formData,
-            }).then(response => {
-                return response.json()
-            }).then(response => {
-                if(response.hasOwnProperty("Error")){
-                    alert(JSON.stringify(response));
-                } else {
-                    getRecordList();
-                }
-            });
+            let dataHTML = "<tr><td>Date</td><td>Choice</td></tr>";
+
+            for(let item of data){
+                dataHTML += "<td>" + item.Date + "</td><td>" + item.choiceName + "</td>";
+            }
+            document.getElementById("recordList").innerHTML = dataHTML;
+        }
+
+        function formatAchievementList(data){
+
         }
 
         function logout(){
@@ -103,20 +110,10 @@
 
 <div style="clear: both">
     <div id="leftDiv" class="halfDivs">
-        <div style="margin: 16px">
-            <h2>Records</h2>
-            <div id="recordBox" class="recordBox">
-                <div id="recordList" class="boxText">No records yet...</div>
-            </div>
-        </div>
+        <table id="recordList" style="border: 2px solid black; font-size: 14px"></table>
     </div>
     <div id="rightDiv" class="halfDivs">
-        <div style="margin: 16px">
-            <h2>Achievements</h2>
-            <div id="achievementBox" class="achievementBox">
-                <div id="achievementList" class="boxText">No achievements yet...</div>
-            </div>
-        </div>
+        <table id="achievementList" style="border: 2px solid black; font-size: 14px"></table>
     </div>
 </div>
 </body>

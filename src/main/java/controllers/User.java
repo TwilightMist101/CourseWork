@@ -141,7 +141,7 @@ public class User {
 
     @GET
     @Path("get")
-    public String userGet(@CookieParam("sessionToken") Cookie sessionCookie) throws SQLException {
+    public String getUser(@CookieParam("sessionToken") Cookie sessionCookie) throws SQLException {
         System.out.println("Invoked User.userGet()");
 
         if (sessionCookie == null) {
@@ -161,6 +161,38 @@ public class User {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return "{\"Error\": \"Something as gone wrong.  Please contact the administrator with the error code UC-UG. \"}";
+        }
+    }
+
+    @POST
+    @Path("update")
+    public String userUpdate(@CookieParam("sessionToken") Cookie sessionCookie,
+                             @FormDataParam("firstName") String firstName,
+                             @FormDataParam("lastName") String lastName,
+                             @FormDataParam("password") String password,
+                             @FormDataParam("email") String email,
+                             @FormDataParam("admin") boolean admin){
+        System.out.println("Invoked User.userUpdate()");
+
+        if(sessionCookie == null){
+            return "{\"Error\": \"Something as gone wrong.  Please contact the administrator with the error code UC-UU. \"}";
+        }
+        try {
+            int userID = User.validateSessionCookie(sessionCookie);
+
+            PreparedStatement statement = Main.db.prepareStatement(
+                    "UPDATE Users SET FirstName = ?, LastName = ?, Password = ?, Email = ?, Admin = ? WHERE UserID = ?"
+            );
+            statement.setString(1, firstName);
+            statement.setString(2, lastName);
+            statement.setString(3, password);
+            statement.setString(4, email);
+            statement.setBoolean(5, admin);
+            statement.executeUpdate();
+            return "OK";
+        } catch (Exception e) {
+            System.out.println(e.getMessage());   //print the exception error message so it can be used to rectify the problem.  Do not send this back to client!
+            return "{\"Error\": \"Something as gone wrong.  Please contact the administrator with the error code UC-UU. \"}";
         }
     }
 

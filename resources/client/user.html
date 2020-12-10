@@ -11,22 +11,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.js"></script>
 
     <script>
-        function userGet(){
-            console.log("invoked userGet()");
-
-            const url = "/user/get";
-            fetch(url, {
-                method: "GET",
-            }).then(response => {                       //returns a promise
-                return response.json();                 //now return that promise to JSON
-            }).then(response => {
-                if (response.hasOwnProperty("Error")) {   //checks if response from server has a key "Error:"
-                    alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
-                    window.open("login.html", "_self");
-                } else {
-                    fillUserForm(response);
-                }
-            });
+        function logout(){
+            console.log("logout - remove cookies and redirect to login page");
+            Cookies.remove("sessionToken");
+            window.location.href = "login.html";
         }
     </script>
 </head>
