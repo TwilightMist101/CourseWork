@@ -32,7 +32,8 @@ public class Record {
 
         JSONArray response = new JSONArray();
         try{
-            PreparedStatement ps = Main.db.prepareStatement("SELECT * FROM Records");
+            PreparedStatement ps = Main.db.prepareStatement("SELECT * FROM Records WHERE UserId = ?");
+            ps.setInt(1, userId);
             ResultSet resultSet = ps.executeQuery();
             while(resultSet.next()){
                 JSONObject rec = new JSONObject();
