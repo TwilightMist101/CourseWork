@@ -10,83 +10,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.js"></script>
     <script>
-        function pageLoad(){
-            console.log("Invoked pageLoad()");
-            var todaysDate = new Date().toISOString().slice(0, 10);  //get today's date as yyyy-mm-dd
-            document.getElementById("datepicker").setAttribute("value", todaysDate);  //set DateEaten date picker to today's date
-            getRecordList();
-            getAchievementList();
-        }
-
-        function getRecordList(){
-            console.log("Invoked getRecordList()");
-            const url = "/record/list";
-            fetch(url, {
-                method: "GET",
-            }).then(response => {
-                return response.json();                 //return promise to JSON
-            }).then(response => {
-                if (response.hasOwnProperty("Error")) {   //checks if response from web server has a key "Error"
-                    alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
-                } else {
-                    formatRecordList(response);         // otherwise format the data as an HTML table
-                }
-            });
-        }
-
-        function getAchievementList(){
-            console.log("Invoked getAchievementList()");
-            const url = "/achievement/list";
-            fetch(url, {
-                method: "GET",
-            }).then(response => {
-                return response.json();                 //return promise to JSON
-            }).then(response => {
-                if (response.hasOwnProperty("Error")) {   //checks if response from web server has a key "Error"
-                    alert(JSON.stringify(response));        // if it does, convert JSON object to string and alert
-                } else {
-                    formatAchievementList(response);         // otherwise format the data as an HTML table
-                }
-            });
-        }
-
-        function formatRecordList(data){
-            console.log("Invoked formatRecordList()");
-            console.log(data);
-
-            let firstRecord;
-            let lastRecord;
-
-            if(data === undefined || data.length === 0){
-                firstRecord = "No records created...";
-            } else {
-                firstRecord = data[0].choiceName;
-                console.log(firstRecord);
-            }
-
-            //document.getElementById("").innerHTML = firstRecord;
-
-            const dataSize = data.length;
-
-            if(data === undefined || data.length === 0){
-                lastRecord = "No records created..."
-            } else {
-                lastRecord = data[dataSize-1].choiceName;
-                //console.log(lastRecord);
-            }
-
-            let dataHTML = "<tr><td>Date</td><td>Choice</td></tr>";
-
-            for(let item of data){
-                dataHTML += "<td>" + item.Date + "</td><td>" + item.choiceName + "</td>";
-            }
-            document.getElementById("recordList").innerHTML = dataHTML;
-        }
-
-        function formatAchievementList(data){
-
-        }
-
         function logout(){
             console.log("logout - remove cookies and redirect to login page");
             Cookies.remove("sessionToken");
@@ -106,15 +29,6 @@
         <a class="a" onclick="logout()">Logout</a>
     </div>
     <input type="text" placeholder="Search..">
-</div>
-
-<div style="clear: both">
-    <div id="leftDiv" class="halfDivs">
-        <table id="recordList" style="border: 2px solid black; font-size: 14px"></table>
-    </div>
-    <div id="rightDiv" class="halfDivs">
-        <table id="achievementList" style="border: 2px solid black; font-size: 14px"></table>
-    </div>
 </div>
 </body>
 </html>

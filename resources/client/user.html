@@ -8,6 +8,8 @@
 
     <link rel="icon" href="img/icon.jpg">
 
+    <script src="/client/js/user.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.js"></script>
 
     <script>
@@ -34,22 +36,42 @@
 
 <br>
 
-<div style="clear: both">
-    <div id="leftDiv" class="halfDivs">
-        <div style="margin: 16px">
+<div class="row">
+    <div>
+        <section>
             <h2>Records</h2>
-            <div id="recordBox" class="recordBox">
-                <div id="recordList" class="boxText">No records yet...</div>
-            </div>
-        </div>
-    </div>
-    <div id="rightDiv" class="halfDivs">
-        <div style="margin: 16px">
+            <table id="recordList" class="recordList">
+                <thead>
+                <tr>
+                    <th>Record ID</th>
+                    <th>User ID</th>
+                    <th>Date</th>
+                    <th>Choice ID</th>
+                    <th>Choice Name</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+            <script>recordList("recordList")</script>
+        </section>
+
+        <section>
             <h2>Achievements</h2>
-            <div id="achievementBox" class="achievementBox">
-                <div id="achievementList" class="boxText">No achievements yet...</div>
-            </div>
-        </div>
+            <table id="achievementList" class="achievementList">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Achievement</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+            <script>achievementList("achievementList")</script>
+        </section>
     </div>
 </div>
 </body>

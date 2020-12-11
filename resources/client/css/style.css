@@ -111,6 +111,32 @@ body {
     padding: 16px;
 }
 
+
+
+.recordList {
+    width: 50%;
+    border-spacing: 2px;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.recordList tbody, .recordList thead {
+    display: block;
+    width: 100%;
+}
+
+.achievementList {
+    width: 50%;
+    border-spacing: 2px;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.achievementList tbody, .achievementList thead {
+    display: block;
+    width: 100%;
+}
+
 @media screen and (max-width: 600px) {
     .topnav a, .topnav input[type=text] {
         float: none;

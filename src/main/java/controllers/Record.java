@@ -1,6 +1,7 @@
 package controllers;
 
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.json.simple.JSONObject;
 import server.Main;
 
 import org.json.simple.JSONArray;
@@ -20,27 +21,27 @@ import static server.Convertor.convertToJSONArray;
 public class Record {
     @GET
     @Path("list")
-    public String recordList(@CookieParam("sessionToken") Cookie sessionCookie){
+    public String getRecord(@CookieParam("sessionToken") Cookie sessionCookie){
         System.out.println("Invoked Record.list()");
 
-        int userID = User.validateSessionCookie(sessionCookie);
-        if(userID == -1){
-            return "{\"Error\": \"Please log in.  Error code EC-EL\"}";
-        }
-
-        try {
-            PreparedStatement statement = Main.db.prepareStatement(
-                    "SELECT RecordId, UserId, Date, ChoiceId, ChoiceName FROM Records WHERE userID = ? ORDER BY Date DESC"
-            );
-            statement.setInt(1, userID);
+        PreparedStatement statement = null;
+        JSONObject response = new JSONObject();
+        try{
+            statement = Main.db.prepareStatement("SELECT * FROM Records");
             ResultSet resultSet = statement.executeQuery();
-            JSONArray newJSONArray = convertToJSONArray(resultSet);
-            System.out.println(newJSONArray.toString());
-            return newJSONArray.toString();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "{\"Error\": \"Something as gone wrong.  Please contact the administrator with the error code WC-WL. \"}";
+            while(resultSet.next()){
+                int id = resultSet.getInt("RecordId");
+                JSONObject rec = new JSONObject();
+                rec.put("UserId", resultSet.getInt("UserId"));
+                rec.put("RecordDate", resultSet.getInt("RecordDate"));
+                rec.put("ChoiceId", resultSet.getInt("ChoiceId"));
+                rec.put("ChoiceName", resultSet.getInt("ChoiceName"));
+                response.put(id, rec);
+            }
+        } catch (Exception e){
+            response.put("Status", "Failure");
         }
+        return response.toString();
     }
 
     @POST
