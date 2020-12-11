@@ -111,30 +111,46 @@ body {
     padding: 16px;
 }
 
-
-
 .recordList {
-    width: 50%;
-    border-spacing: 2px;
-    border-collapse: collapse;
+    width: auto;
+    border-spacing: 10px;
+    padding: 16px;
+    font-size: 14px;
+    border: 0px;
+    text-align: center;
     table-layout: fixed;
+    border-collapse: collapse;
 }
 
-.recordList tbody, .recordList thead {
-    display: block;
-    width: 100%;
+.recordList td {
+    width: auto;
+    padding: 16px;
+    font-size: 14px;
+    border: 2px solid black;
+    text-align: center;
+    table-layout: fixed;
+    border-collapse: collapse;
 }
 
 .achievementList {
-    width: 50%;
-    border-spacing: 2px;
-    border-collapse: collapse;
+    width: auto;
+    border-spacing: 10px;
+    padding: 16px;
+    font-size: 14px;
+    border: 0px;
+    text-align: center;
     table-layout: fixed;
+    border-collapse: collapse;
 }
 
-.achievementList tbody, .achievementList thead {
-    display: block;
-    width: 100%;
+.achievementList td {
+    width: auto;
+    padding: 16px;
+    font-size: 14px;
+    border: 2px solid black;
+    text-align: center;
+    table-layout: fixed;
+    border-collapse: collapse;
 }
 
 @media screen and (max-width: 600px) {

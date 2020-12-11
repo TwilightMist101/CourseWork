@@ -16,7 +16,7 @@
         function pageLoad(){
             console.log("Invoked pageLoad()");
             getRecordList();
-            //getAchievementList();  commented because you don't have an API method for this yet
+            getAchievementList();
         }
 
         function logout(){
@@ -24,7 +24,6 @@
             Cookies.remove("sessionToken");
             window.location.href = "login.html";
         }
-
 
         function getRecordList(){
             console.log("Invoked getRecordList()");
@@ -43,18 +42,17 @@
         }
 
         function getAchievementList(){
-            console.log("Invoked getAcheivementList()");
-
+            console.log("Invoked getAchievementList()");
             var url = "/achievement/list";
 
-            fetch(url, {method: "GET"}).then( response => {
+            fetch(url, {
+                method: "GET"}).then(response => {
                 return response.json();
             }).then (response => {
                 if (response.hasOwnProperty("Error")) {
                     alert(JSON.stringify(response));
                 } else {
-                    console.log(response);
-                    refreshAchievementTable(response);
+                    formatAchievements(response);
                 };
             });
         }
@@ -66,58 +64,21 @@
 
             for (let item of response) {
                 dataHTML += "<tr><td>" + item.RecordDate + "</td><td>" + item.ChoiceId + "</td><td>"
-                    + item.ChoiceName + "</td></tr>";               }
-            document.getElementById("tblRecords").innerHTML = dataHTML;
-
-
-
-        }
-
-        function refreshAchievementTable(response){
-            removeAllAchievementRows(name);
-            for (let id in response){
-                addTableAchievementRow(name, id, response[id]);
+                    + item.ChoiceName + "</td></tr>";
             }
+            document.getElementById("tblRecords").innerHTML = dataHTML;
         }
 
-        function removeAllRecordRows(name) {
-            var tblObject = document.getElementById(name);
-            // Remove any existing rows except for the title row
-            tblObject.removeChild(tblObject.getElementsByTagName("tbody")[0]);
-            var tblBody = document.createElement("tbody");
-            tblObject.appendChild(tblBody);
+        function formatAchievements(response){
+            console.log(response);
+
+            let dataHTML = "<tr><td>Achievement Date</td><td>Achievement</td></tr>"
+
+            for(let item of response){
+                dataHTML += "<tr><td>" + item.AchievementDate + "</td><td>" + item.AchievementName + "</td></tr>";
+            }
+            document.getElementById("tblAchievements").innerHTML = dataHTML;
         }
-
-        function removeAllAchievementRows(name) {
-            var tblObject = document.getElementById(name);
-            // Remove any existing rows except for the title row
-            tblObject.removeChild(tblObject.getElementsByTagName("tbody")[0]);
-            var tblBody = document.createElement("tbody");
-            tblObject.appendChild(tblBody);
-        }
-
-        function addTableRecordRow(name, id, jsonElements){
-            var tblObject = document.getElementById(name);
-            var tblBody = tblObject.getElementsByTagName("tbody")[0];
-            var tblRow = tblBody.insertRow();
-            tblRow.insertCell(0).innerHTML = id;
-            tblRow.insertCell(1).innerHTML = jsonElements["UserId"];
-            tblRow.insertCell(2).innerHTML = jsonElements["RecordDate"];
-            tblRow.insertCell(3).innerHTML = jsonElements["ChoiceId"];
-            tblRow.insertCell(4).innerHTML = jsonElements["ChoiceName"];
-        }
-
-        function addTableAchievementRow(name, id, jsonElements){
-            var tblObject = document.getElementById(name);
-            var tblBody = tblObject.getElementsByTagName("tbody")[0];
-            var tblRow = tblBody.insertRow();
-            tblRow.insertCell(0).innerHTML = jsonElements["AchievementDate"];
-            tblRow.insertCell(1).innerHTML = jsonElements["AchievementName"];
-        }
-
-
-
-
     </script>
 
 
@@ -126,7 +87,6 @@
 <div class="topnav">
     <a class="active" href="profile.html">Profile</a>
     <a class="a" href="question1.html">Questionnaire</a>
-    <a class="a" href="progressGraph.html">Progress</a>
     <div class="topnav-centered">
         <a class="a" href="index.html">Mentality</a>
     </div>
@@ -150,18 +110,9 @@
 
         <section>
             <h2>Achievements</h2>
-            <table id="achievementList" class="achievementList">
-                <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Achievement</th>
-                </tr>
-                </thead>
-                <tbody>
+            <table id="tblAchievements" class="achievementList">
 
-                </tbody>
             </table>
-
         </section>
     </div>
 </div>
