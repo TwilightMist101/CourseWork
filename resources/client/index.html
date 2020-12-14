@@ -16,10 +16,45 @@
         }
 
         function drawGraph(){
-            console.log("Invoked drawGraph()");
+            console.log("invoked drawGraph()");
 
+            var data = [{"gender": "male", "score" : 3}, {"gender": "female", "score" : 13}];  //JSON Array
 
+            var labels = data.map(function (e) {
+                return e.gender;
+            });
+            var scores = data.map(function (e) {
+                return e.score;
+            });
+
+            var ctx = document.getElementById("myChart").getContext("2d");
+            var config = {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Average scores by gender',  //title of graph
+                        data: scores,
+                        backgroundColor: 'rgba(0, 119, 204, 0.3)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                            }
+                        }]
+                    }
+                },
+
+            };
+
+            var chart= new Chart(ctx, config);
         }
+
 
         function logout(){
             console.log("logout - remove cookies and redirect to login page");
@@ -28,7 +63,7 @@
         }
     </script>
 </head>
-<body>
+<body onload="drawGraph()">
 <div class="topnav">
     <a class="a" href="profile.html">Profile</a>
     <a class="a" href="question1.html">Questionnaire</a>
@@ -40,5 +75,9 @@
     </div>
     <input type="text" placeholder="Search..">
 </div>
+
+<br>
+
+<canvas id="myChart" style="height: 50vh"></canvas>
 </body>
 </html>
