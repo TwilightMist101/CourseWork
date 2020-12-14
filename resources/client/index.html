@@ -24,7 +24,19 @@
         function getDataForGraph(){
             //write API call here to get data
             //if no error, call drawGraph and pass in reponse (JSONArray from server)
+            console.log("Invoked getDataForGraph()");
+            var url = "/record/list";
 
+            fetch(url, {
+                method: "GET"}).then(response => {
+                return response.json();
+            }).then (response => {
+                if (response.hasOwnProperty("Error")) {
+                    alert(JSON.stringify(response));
+                } else {
+                    drawGraph(response);
+                }
+            });
         }
 
         function drawGraph(data) {
