@@ -9,50 +9,76 @@
     <link rel="icon" href="img/icon.jpg">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.js"></script>
+
+
+
     <script>
         function pageLoad(){
             console.log("Invoked pageLoad()");
-            drawGraph();
+            //get data for graph
+            getDataForGraph();
+
+
         }
 
-        function drawGraph(){
-            console.log("invoked drawGraph()");
+        function getDataForGraph(){
+            //write API call here to get data
+            //if no error, call drawGraph and pass in reponse (JSONArray from server)
 
-            var data = [{"gender": "male", "score" : 3}, {"gender": "female", "score" : 13}];  //JSON Array
+        }
 
-            var labels = data.map(function (e) {
-                return e.gender;
+        function drawGraph(data) {
+
+            requirejs.config({
+                paths: {
+                    'jquery': '//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min',
+                    'moment': '//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment',
+                    'chartjs': '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart'
+                }
             });
-            var scores = data.map(function (e) {
-                return e.score;
+
+            define('moment-adapter', ['moment'], function (moment) {
+                // Set the global.
+                window.moment = moment;
+                return moment;
             });
 
-            var ctx = document.getElementById("myChart").getContext("2d");
-            var config = {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Average scores by gender',  //title of graph
-                        data: scores,
-                        backgroundColor: 'rgba(0, 119, 204, 0.3)'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true,
-                            }
+            require(['jquery', 'moment-adapter', 'chartjs'], function ($, moment, Chart) {
+
+                function day(offset) {
+                    return moment().add(offset, 'd').toDate();
+                }
+
+                // map() method creates a new array with the results of calling a function for every array element.
+                var labels = data.map(function (e) {
+                    return new Date(e.Date);
+                });
+                var choices = data.map(function (e) {
+                    return e.ChoiceId;
+                });
+
+                var ctx = document.getElementById("myChart").getContext("2d");
+                var config = {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Choices Over Time',
+                            data: choices,
+                            backgroundColor: 'rgba(0, 119, 204, 0.3)'
                         }]
+                    },
+                    options: {
+                        scales: {
+                            xAxes: [{
+                                type: 'time',
+                                distribution: 'linear'
+                            }]
+                        }
                     }
-                },
-
-            };
-
-            var chart= new Chart(ctx, config);
+                };
+                var chart = new Chart(ctx, config);
+            })
         }
 
 
@@ -77,7 +103,8 @@
 </div>
 
 <br>
-
-<canvas id="myChart" style="height: 50vh"></canvas>
+<div class="container">
+    <canvas id="myChart"></canvas>
+</div>
 </body>
 </html>
