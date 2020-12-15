@@ -17,13 +17,11 @@
             console.log("Invoked pageLoad()");
             //get data for graph
             getDataForGraph();
-
-
         }
 
         function getDataForGraph(){
             //write API call here to get data
-            //if no error, call drawGraph and pass in reponse (JSONArray from server)
+            //if no error, call drawGraph and pass in response (JSONArray from server)
             console.log("Invoked getDataForGraph()");
             var url = "/record/list";
 
@@ -101,7 +99,7 @@
         }
     </script>
 </head>
-<body onload="drawGraph()">
+<body onload="pageLoad()">
 <div class="topnav">
     <a class="a" href="profile.html">Profile</a>
     <a class="a" href="question1.html">Questionnaire</a>
