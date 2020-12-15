@@ -9,6 +9,7 @@
     <link rel="icon" href="img/icon.jpg">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.js"></script>
 
 
 
@@ -56,7 +57,7 @@
             require(['jquery', 'moment-adapter', 'chartjs'], function ($, moment, Chart) {
 
                 function day(offset) {
-                    return moment().add(offset, 'd').toDate();
+                    return moment().add(offset, 'date').toDate();
                 }
 
                 // map() method creates a new array with the results of calling a function for every array element.
