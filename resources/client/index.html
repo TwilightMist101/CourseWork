@@ -21,8 +21,7 @@
         }
 
         function getDataForGraph(){
-            //write API call here to get data
-            //if no error, call drawGraph and pass in response (JSONArray from server)
+
             console.log("Invoked getDataForGraph()");
             var url = "/record/list";
 
@@ -39,6 +38,7 @@
         }
 
         function drawGraph(data) {
+            console.log(data);
 
             requirejs.config({
                 paths: {
@@ -57,12 +57,13 @@
             require(['jquery', 'moment-adapter', 'chartjs'], function ($, moment, Chart) {
 
                 function day(offset) {
-                    return moment().add(offset, 'date').toDate();
+                    return moment().add(offset, 'd').toDate();
                 }
 
                 // map() method creates a new array with the results of calling a function for every array element.
                 var labels = data.map(function (e) {
-                    return new Date(e.Date);
+                   return new Date(e.RecordDate);
+                    //return new Date();
                 });
                 var choices = data.map(function (e) {
                     return e.ChoiceId;
