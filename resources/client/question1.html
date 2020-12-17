@@ -15,6 +15,12 @@
             Cookies.remove("sessionToken");
             window.location.href = "login.html";
         }
+
+        function submitChoice(choiceID, choiceName) {
+            console.log("adding record")
+            var url = "record/add";
+            var date;
+        }
     </script>
 </head>
 <body>
@@ -35,11 +41,11 @@
 
     <table style="width: 50%">
         <tr>
-            <td><a href="question2.html" id="choice1"><img src="img/Happy.jpg" alt="Happy" height="130px" width="130px"></a></td>
-            <td><a href="question2.html" id="choice2"><img src="img/icon.jpg" alt="Happy" height="130px" width="130px"></a></td>
-            <td><a href="question2.html" id="choice3"><img src="img/Meh.jpg" alt="Meh" height="130px" width="130px"></a></td>
-            <td><a href="question2.html" id="choice4"><img src="img/icon.jpg" alt="Happy" height="130px" width="130px"></a></td>
-            <td><a href="question2.html" id="choice5"><img src="img/Unhappy.jpg" alt="Unhappy" height="130px" width="130px"></a></td>
+            <td><a href="question2.html" id="choice1" onclick="submitChoice(1, 'Happy')"><img src="img/Happy.jpg" alt="Happy" height="130px" width="130px"></a></td>
+            <td><a href="question2.html" id="choice2" onclick="submitChoice(2, 'OK')"><img src="img/icon.jpg" alt="OK" height="130px" width="130px"></a></td>
+            <td><a href="question2.html" id="choice3" onclick="submitChoice(3, 'Meh')"><img src="img/Meh.jpg" alt="Meh" height="130px" width="130px"></a></td>
+            <td><a href="question2.html" id="choice4" onclick="submitChoice(4, 'Not OK')"><img src="img/icon.jpg" alt="Not OK" height="130px" width="130px"></a></td>
+            <td><a href="question2.html" id="choice5" onclick="submitChoice(5, 'Unhappy')"><img src="img/Unhappy.jpg" alt="Unhappy" height="130px" width="130px"></a></td>
         </tr>
     </table>
 </div>
