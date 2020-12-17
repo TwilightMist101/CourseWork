@@ -79,6 +79,57 @@
             }
             document.getElementById("tblAchievements").innerHTML = dataHTML;
         }
+
+        function userRecordDelete(){
+            console.log("Invoked userRecordDelete()");
+            var url = "record/delete/{recordID}";
+            fetch(url, {
+                method: "POST",
+            }).then(response => {
+                return response.json();
+            }).then(response => {
+                if (response.hasOwnProperty("Error")) {
+                    alert(response.toString());
+                } else {
+
+                }
+            });
+        }
+
+        function userAchievementDelete(){
+            console.log("Invoked userAchievementDelete()");
+            var url = "achievement/delete";
+            fetch(url, {
+                method: "POST",
+            }).then(response => {
+                return response.json();
+            }).then(response => {
+                if (response.hasOwnProperty("Error")) {
+                    alert(response.toString());
+                } else {
+
+                }
+            });
+        }
+
+        function userDelete(){
+            console.log("Invoked userDelete()");
+            var url = "user/delete/{userID}";
+            userRecordDelete();
+            userAchievementDelete();
+
+            fetch(url, {
+                method: "POST",
+            }).then(response => {
+                return response.json();
+            }).then(response => {
+                if (response.hasOwnProperty("Error")) {
+                    alert(response.toString());
+                } else {
+                    window.open("login.html", "_self");
+                }
+            });
+        }
     </script>
 
 
@@ -92,6 +143,7 @@
     </div>
     <div class="topnav-right">
         <a class="a" onclick="logout()">Logout</a>
+        <a class="a" onclick="userDelete()">Delete Account</a>
     </div>
     <input type="text" placeholder="Search..">
 </div>

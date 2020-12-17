@@ -99,4 +99,25 @@ public class Record {
         }
     }
 
+    @POST
+    @Path("delete/{recordID}")
+    public String recordDelete(@PathParam("recordID") int recordID, @CookieParam("sessionToken") Cookie sessionCookie){
+        System.out.println("Invoked Record.recordDelete()");
+        int userID = User.validateSessionCookie(sessionCookie);
+
+        if (userID == -1) {
+            return "{\"Error\": \"Please log in.  Error code EC-EL\"}";
+        }
+        try {
+            PreparedStatement statement = Main.db.prepareStatement(
+                    "DELETE FROM Weights WHERE RecordID = ?"
+            );
+            statement.setInt(1, recordID);
+            statement.executeUpdate();
+            return "{\"OK\": \"Record has been deleted. \"}";
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "{\"Error\": \"Something as gone wrong.  Please contact the administrator with the error code WC-WD. \"}";
+        }
+    }
 }

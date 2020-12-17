@@ -196,6 +196,21 @@ public class User {
         }
     }
 
+    @POST
+    @Path("delete")
+    public String userDelete(@CookieParam("sessionToken") Cookie sessionCookie){
+        System.out.println("Invoked User.userDelete()");
+        try {
+            PreparedStatement statement = Main.db.prepareStatement("DELETE FROM Users WHERE UUID = ?");
+            statement.setString(1, sessionCookie.getValue());
+            statement.executeUpdate();
+            return "{\"OK\": \"User deleted\"}";
+        } catch (Exception e){
+            System.out.println("Database error: " + e.getMessage());
+            return "{\"Error\": \"Unable to delete item, please see server console for more info.\"}";
+        }
+    }
+
     /*@Path("get/{UserID}")
     public String getFood(@PathParam("UserID") Integer UserID) {
         System.out.println("Invoked User.getUser() with UserID " + UserID);

@@ -97,4 +97,25 @@ public class Achievement {
         }
     }
 
+    @POST
+    @Path("delete/{achievementID}")
+    public String recordDelete(@PathParam("achievementID") int achievementID, @CookieParam("sessionToken") Cookie sessionCookie){
+        System.out.println("Invoked Achievement.achievementDelete()");
+        int userID = User.validateSessionCookie(sessionCookie);
+
+        if (userID == -1) {
+            return "{\"Error\": \"Please log in.  Error code EC-EL\"}";
+        }
+        try {
+            PreparedStatement statement = Main.db.prepareStatement(
+                    "DELETE FROM Achievements WHERE AchievementID = ?"
+            );
+            statement.setInt(1, achievementID);
+            statement.executeUpdate();
+            return "{\"OK\": \"Achievement has been deleted. \"}";
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "{\"Error\": \"Something as gone wrong.  Please contact the administrator with the error code WC-WD. \"}";
+        }
+    }
 }
