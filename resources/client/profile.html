@@ -114,9 +114,8 @@
 
         function userDelete(){
             console.log("Invoked userDelete()");
-            var url = "user/delete/{userID}";
-            userRecordDelete();
-            userAchievementDelete();
+
+            var url = "/user/delete";
 
             fetch(url, {
                 method: "POST",
@@ -126,6 +125,7 @@
                 if (response.hasOwnProperty("Error")) {
                     alert(response.toString());
                 } else {
+                    alert("You're user account has been deleted");
                     window.open("login.html", "_self");
                 }
             });

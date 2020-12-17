@@ -198,10 +198,12 @@ public class User {
 
     @POST
     @Path("delete")
-    public String userDelete(@CookieParam("sessionToken") Cookie sessionCookie){
+    public String userDelete(@CookieParam("Token") Cookie sessionCookie){
         System.out.println("Invoked User.userDelete()");
+
+
         try {
-            PreparedStatement statement = Main.db.prepareStatement("DELETE FROM Users WHERE UUID = ?");
+            PreparedStatement statement = Main.db.prepareStatement("DELETE FROM Users WHERE Token = ?");
             statement.setString(1, sessionCookie.getValue());
             statement.executeUpdate();
             return "{\"OK\": \"User deleted\"}";
