@@ -50,7 +50,7 @@ public class Achievement {
 
     @POST
     @Path("add")
-    public String addRecord(@FormDataParam("date") String date,
+    public String addAchievement(@FormDataParam("date") String date,
                             @FormDataParam("achievementId") int achievementId,
                             @FormDataParam("achievementName") String achievementName,
                             @CookieParam("sessionToken") Cookie sessionCookie){
@@ -99,7 +99,7 @@ public class Achievement {
 
     @POST
     @Path("delete/{achievementID}")
-    public String recordDelete(@PathParam("achievementID") int achievementID, @CookieParam("sessionToken") Cookie sessionCookie){
+    public String achievementDelete(@PathParam("achievementID") int achievementID, @CookieParam("sessionToken") Cookie sessionCookie){
         System.out.println("Invoked Achievement.achievementDelete()");
         int userID = User.validateSessionCookie(sessionCookie);
 
